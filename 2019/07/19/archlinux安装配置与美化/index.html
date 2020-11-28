@@ -1,0 +1,638 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="CFD">
+  <meta name="author" content="田同学">
+  <meta name="keywords" content="">
+  <title>Archlinux安装配置与美化 - 田同学de芥末</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.8.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>田同学de小站</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Archlinux安装配置与美化">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2019-07-19 10:52" pubdate>
+        July 19, 2019 am
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.2k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      26
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Archlinux安装配置与美化</h1>
+            
+            <div class="markdown-body">
+              <p>给出详细的archlinux安装图文教程，初次接触archlinux的朋友能够按照教程完成arch安装。在后文给出一些archlinux的配置和美化攻略。本文长期更新。</p>
+<p>另外，安利大家使用archlinux。笔者先后使用了ubuntu、debian、openSUSE、deepin、elementary OS、Nitrix、Zorie OS、Cent OS等Linux发行版，最后投奔到archlinux麾下。</p>
+<p>archlinux优点和缺陷，网络上有很多的资料，大家可以去参考。但是，告诉朋友的是，任何一个发行版，都有自己的优点，也有自己的缺点。没有必要互相攻讦或者互相吹捧。这么多linux发行版的尝试，对笔者而言，只能说<strong>虚耗时光</strong>，倒是最后停留在arch之后的时间里，才对linux作了认真的学习，有了一些收获。所以，推荐arch。</p>
+<a id="more"></a>
+<p>正文开始！</p>
+<h1 id="u盘启动工作制作"><a href="#u盘启动工作制作" class="headerlink" title="u盘启动工作制作"></a>u盘启动工作制作</h1><h2 id="下载archlinux镜像文件。"><a href="#下载archlinux镜像文件。" class="headerlink" title="下载archlinux镜像文件。"></a>下载archlinux镜像文件。</h2><p>到<a target="_blank" rel="noopener" href="https://www.archlinux.org/download/">archlinux官网下载页面</a>，找到下图标注的地方，点击下载(网页一直下拉即可找到)。</p>
+<p><a target="_blank" rel="noopener" href="https://www.archlinux.org/download/">下载源</a></p>
+<p><a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/">清华源</a></p>
+<h2 id="下载u盘制作工具"><a href="#下载u盘制作工具" class="headerlink" title="下载u盘制作工具"></a>下载u盘制作工具</h2><p>U盘制作工具推荐使用<a target="_blank" rel="noopener" href="https://cn.ultraiso.net/">Ultraiso</a>.</p>
+<h2 id="刻入u盘"><a href="#刻入u盘" class="headerlink" title="刻入u盘"></a>刻入u盘</h2><ol>
+<li>打开UltraISO。</li>
+<li>点击文件菜单，打开刚下载的archlinux的iso文件。</li>
+<li>点击启动菜单，选择<code>写入硬盘影响</code>.</li>
+<li>硬盘驱动器选择自己准备好的u盘（<strong>U盘的文件会被清理，请提前做好备份</strong>）</li>
+<li>写入方式选择<strong>RAW</strong>。（一定要选择此选项，其它选项好像不能成功）</li>
+</ol>
+<p><img src="/home/mx/Apps/blog/static/tmp/1.jpeg" srcset="/img/loading.gif" alt="选择文件"></p>
+<p><img src="/home/mx/Apps/blog/static/tmp/2.jpeg" srcset="/img/loading.gif" alt="选择写入硬盘"></p>
+<p><img src="/home/mx/Apps/blog/static/tmp/3.jpeg" srcset="/img/loading.gif" alt="选择u盘与写入方式"></p>
+<hr>
+<h1 id="开始安装"><a href="#开始安装" class="headerlink" title="开始安装"></a>开始安装</h1><h2 id="开机"><a href="#开机" class="headerlink" title="开机"></a>开机</h2><p>关闭电脑，插入u盘，开机之后，进入<strong>BISO</strong>面板（一般电脑在开机的时候按住F12键，不同电脑快捷键不同，如果F12不能成功，请网上查找对应型号的快捷键。）</p>
+<p>选择u盘启动</p>
+<p>选择第一个选项，如图</p>
+<p><img src="/home/mx/Apps/blog/static/tmp/4.jpeg" srcset="/img/loading.gif" alt="u盘启动界面"></p>
+<p>进入系统后的界面。</p>
+<p><img src="/home/mx/Apps/blog/static/tmp/5.jpeg" srcset="/img/loading.gif" alt="系统界面"></p>
+<p>此时，在root用户权限下。</p>
+<h2 id="wifi链接"><a href="#wifi链接" class="headerlink" title="wifi链接"></a>wifi链接</h2><p>接下来连接网络，输入<code>wifi-menu</code>命令，按回车。在弹出框中选择自己的wifi并输入密码。</p>
+<pre><code class="hljs shell">wifi-menu</code></pre>
+<p>链接之后，测试链接是否成功。输入</p>
+<pre><code class="hljs shell">ping -c 4 www.baidu.com</code></pre>
+<p>按回车，如果没有报错，而是输出了ping回来的信息，说明链接成功。</p>
+<p>执行</p>
+<pre><code class="hljs shell">timedatectl set-ntp true</code></pre>
+<p>同步时间。</p>
+<h2 id="镜像站文件编辑"><a href="#镜像站文件编辑" class="headerlink" title="镜像站文件编辑"></a>镜像站文件编辑</h2><p>linux终端一般使用vim作为编辑器。先安装vim.</p>
+<p>输入<code>pacman -S vim</code>，按回车，会成功安装vim编辑器。</p>
+<p>接下来编辑镜像源文件。</p>
+<p>输入<code>vim /etc/pacman.d/mirrorlist</code>，然后按回车，打开配置文件.</p>
+<p>按<code>/China</code>命令，回车找到第一个China源。按<code>dd</code>剪切源文件，按<code>gg</code>返回到首行，按下移光标，将光标切换到’# Germany’行首，按<code>p</code>粘贴。重复上面的动作，将China源移到前面。在镜像文件中，有多个China的链接，一般选择清华源或者中科大源即可。</p>
+<p>确保源文件修改正确，按<code>:wq</code>，按回车键退出文件编辑。</p>
+<h2 id="分区"><a href="#分区" class="headerlink" title="分区"></a>分区</h2><p>分区有很多的方案。这里推荐一种新手易于使用的方案。</p>
+<p>首先查看当前磁盘信息：</p>
+<p>执行<code>lsblk</code>命令，按回车，输出当前电脑磁盘信息。</p>
+<p><img src="/home/mx/Apps/blog/static/tmp/6.jpeg" srcset="/img/loading.gif" alt="电脑磁盘信息"></p>
+<p>使用<strong>fdisk</strong>命令分区。</p>
+<p>执行：<code>fdisk /dev/sda</code>,其中<strong>sda</strong>是前面输出的磁盘名称，按回车。</p>
+<p>输入<code>g</code>（目的是建立分区表，读者不用关心它是什么）</p>
+<p>输入<code>n</code>（添加一个新的分区，请阅读提示信息）</p>
+<p>回车！</p>
+<p>再回车跳过首信息。</p>
+<p>输入<code>+2G</code>，按回车。</p>
+<p>这样建立了一个2G大小的磁盘空间。</p>
+<p>同样执行下面三组命令，再建立三个磁盘分区。</p>
+<p>第一组命令：</p>
+<pre><code class="hljs shell">n
+回车
+回车
++100G
+回车</code></pre>
+<p>第二组命令：</p>
+<pre><code class="hljs shell">n
+回车
+回车
++20G
+回车</code></pre>
+<p>第二组命令：</p>
+<pre><code class="hljs shell">n
+回车
+回车
+回车
+回车</code></pre>
+<p>这样建立了四个大小分别是2G、100G、20G、剩余大小的分区。</p>
+<p>注意，磁盘的请大家根据自己的需求和硬件来分配。一般要求第一个分区不小于500M。</p>
+<p>执行<code>w</code>,回车。保存分区信息。同时会退出分区操作。</p>
+<h2 id="磁盘格式化"><a href="#磁盘格式化" class="headerlink" title="磁盘格式化"></a>磁盘格式化</h2><p>现在要给不同的分区加载不同的文件系统。</p>
+<p>执行<code>mkfs.fat -F32 /dev/sda1</code>，给第一个分区加载fat文件系统。</p>
+<p>执行<code>mkfs.ext4 /dev/sda2</code>， 给第二个分区加载ext4文件系统。</p>
+<p>执行<code>mkswap /dev/sda3</code>, 将第三个分区作为交换空间</p>
+<p>执行<code>mkfs.ext4 /dev/sda4</code>，给第四个分区加载ext4文件系统。</p>
+<h2 id="文件挂载"><a href="#文件挂载" class="headerlink" title="文件挂载"></a>文件挂载</h2><p>分区准备好之后，我们需要将镜像文件<strong>挂载</strong>到相应的分区。</p>
+<p>执行<code>mount /dev/sda2 /mnt</code>。</p>
+<p>执行<code>mkdir /mnt/boot</code>。</p>
+<p>执行<code>mkdir /mnt/home</code>。</p>
+<p>执行<code>mkdir /mnt/boot/EFI</code>。</p>
+<p>执行<code>mount /dev/sda1 /mnt/boot/EFI</code>。</p>
+<p>执行<code>mount /dev/sda4 /mnt/home</code>。</p>
+<p>执行<code>swapon /dev/sda3</code>。</p>
+<p>至此，文件挂载成功。</p>
+<h2 id="基本系统安装"><a href="#基本系统安装" class="headerlink" title="基本系统安装"></a>基本系统安装</h2><p>执行<code>pacman -i /mnt base base-devel</code>。</p>
+<p>开始安装。</p>
+<h2 id="配置fstab"><a href="#配置fstab" class="headerlink" title="配置fstab"></a>配置fstab</h2><p>执行<code>genfstab -U /mnt &gt;&gt; /mnt/etc/fstab</code>。</p>
+<p>执行<code>cat /mnt/etc/fstab</code>查看， 如果显示如下，说明配置成功。</p>
+<p><img src="/home/mx/Apps/blog/static/tmp/7.jpeg" srcset="/img/loading.gif" alt="fstab配置成功"></p>
+<h2 id="本地语言配置"><a href="#本地语言配置" class="headerlink" title="本地语言配置"></a>本地语言配置</h2><p>首先执行<code>arch-chroot /mnt /bin/bash</code>，切换到新系统。</p>
+<p>执行<code>vim /etc/locale.gen</code>。</p>
+<p>利用<code>/ en_US.UTF-8 UTF-8</code>，去掉前面的注释符号（按<code>x</code>键可以删除）</p>
+<p>利用<code>/ zh_CN.UTF-8 UTF-8</code>，去掉前面的注释符号。</p>
+<p>执行<code>locale-gen</code></p>
+<p>执行<code>echo LANG=en_US.UTF-8 &gt; /etc/locale.conf</code>。设置系统语言为英文。如果需要系统语言为中文，就执行<code>echo LANG=zh_CN.UTF-8 &gt; /etc/locale.conf</code>。</p>
+<h2 id="时区设置"><a href="#时区设置" class="headerlink" title="时区设置"></a>时区设置</h2><p>执行<code>ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</code>。</p>
+<p>设置硬件时间：</p>
+<p>执行<code>hwclock --systohc --utc</code>。</p>
+<h2 id="安装系统引导"><a href="#安装系统引导" class="headerlink" title="安装系统引导"></a>安装系统引导</h2><p>执行<code>pacman -S grub efibootmgr</code>(默认为EFI引导)</p>
+<p>执行<code>grub-install --target=x86_64-efi --efi-directory=/boot/EFI --recheck</code>。</p>
+<p>执行<code>grub-mkconfig -o /boot/grub/grub.cfg</code>。</p>
+<h2 id="切换到新用户"><a href="#切换到新用户" class="headerlink" title="切换到新用户"></a>切换到新用户</h2><pre><code class="hljs awk">arch-chroot <span class="hljs-regexp">/mnt /</span>bin/bash</code></pre>
+<h2 id="新建用户"><a href="#新建用户" class="headerlink" title="新建用户"></a>新建用户</h2><p>首先设置root用户密码。</p>
+<p>执行<code>passwd</code>。输入root用户的密码。</p>
+<p>执行<code>useradd -m -g users -s /bin/bash name</code>。其中name改成自己的用户名字。</p>
+<p>执行<code>passwd name</code>，设置用户密码。</p>
+<p>执行<code>sudo vim /etc/suders</code>。光标下移找到<strong>root ALL=(ALL) ALL</strong>，在下面添加<code>name ALL=(ALL) ALL</code>一行。（按<code>a</code>进入插入模式）</p>
+<h2 id="网络配置"><a href="#网络配置" class="headerlink" title="网络配置"></a>网络配置</h2><p>执行<code>sudo pacman -S dhcpcd networkmanager</code>，安装网络驱动。</p>
+<p>执行<code>sudo systemctl enable dhcpcd</code>。</p>
+<p>执行<code>sudo pacman -S iw wpa_supplicant dialog</code>，安装无线驱动和管理工具。</p>
+<p>如果是宽带用户，需要配置下面两个语句：</p>
+<p>执行<code>sudo pacman -S rp-pppoe# pppoe-setup</code></p>
+<p>执行<code>sudo systemctl start adsl</code></p>
+<h2 id="安装显卡驱动"><a href="#安装显卡驱动" class="headerlink" title="安装显卡驱动"></a>安装显卡驱动</h2><p>执行<code>lspci | grep VGA</code>，查看电脑的显卡。按照显卡安装相应的驱动：</p>
+<p>执行<code>sudo pacman -S 驱动名称</code></p>
+<p>常见的驱动有：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>显卡</th>
+<th>驱动名称</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>通用</td>
+<td>xf86-video-vesa</td>
+</tr>
+<tr>
+<td>intel</td>
+<td>xf86-video-intel</td>
+</tr>
+<tr>
+<td>Geforce7</td>
+<td>xf86-video-nouveau</td>
+</tr>
+<tr>
+<td>Geforce6/7</td>
+<td>xf86-video-304xx</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="安装x窗口"><a href="#安装x窗口" class="headerlink" title="安装x窗口"></a>安装x窗口</h2><p>执行<code>pacman -S xorg</code>，选择所有默认软件，一路回车，完成xorg窗口安装。</p>
+<p>执行<code>pacman -S  xf86-input-synaptics</code>，安装触摸板驱动（台式机不需要）。</p>
+<p>执行<code>pacman -S ttf-dejavu wqy-microhei wqy-zenhei</code>，完成中文字体支持（不然会出现中文字体变成方框的现象）。</p>
+<h2 id="安装桌面环境"><a href="#安装桌面环境" class="headerlink" title="安装桌面环境"></a>安装桌面环境</h2><h3 id="安装plasma"><a href="#安装plasma" class="headerlink" title="安装plasma"></a>安装plasma</h3><p>执行<code>pacman -S plasma</code>，安装plasma桌面环境。</p>
+<p>执行<code>pacman -S konsole</code>，安装kde的控制台。</p>
+<p>执行<code>pacman -S dolphin</code>， 安装kde文件资源管理器。</p>
+<p>执行<code>pacman -S kde-applicantions</code>，安装kde常用工具套装。</p>
+<p>执行<code>systemctl enable sddm</code>，启动sddm显示管理器。</p>
+<p>执行<code>sysytemctl enable NetworkManager</code>，启动网络管理。</p>
+<p>执行<code>pacman -S plasma-nm</code>，安装kde网络管理前端工具（图形界面）。</p>
+<p>执行<code>reboot</code>，重新启动。</p>
+<p>至此，安装基本完成。</p>
+<h3 id="安装gnome"><a href="#安装gnome" class="headerlink" title="安装gnome"></a>安装gnome</h3><p>执行<code>pacman -S gnome</code>，安装gnome桌面。</p>
+<p>执行<code>pacman -S gnome-tweaks</code>，安装gnome图形配置工具。</p>
+<p>执行<code>pacman -S alacarte</code>，安装gnome桌面菜单编辑器。</p>
+<p>执行<code>sysytemctl enable gdm</code>，启动gnome窗口管理服务。</p>
+<p>执行<code>sysytemctl enable NetworkManager</code>，启动网络管理服务。</p>
+<p>执行<code>reboot</code>，重新启动。</p>
+<h2 id="源更换"><a href="#源更换" class="headerlink" title="源更换"></a>源更换</h2><p>更换archlinuxcn源，安装一些中国用户常用的软件。</p>
+<p>执行<code>sudo vim /etc/pacman.conf</code></p>
+<p>在文件最后添加：</p>
+<pre><code class="hljs shell">[archlinuxcn]
+SigLevel=Never
+Server =https://mirrors.ustc.edu.cn/archlinuxcn/$arch</code></pre>
+<p>按<code>Esc</code>键，接着输入<code>:wq</code>保存。</p>
+<p>执行<code>sudo pacman -Syu</code>，即可更新源。</p>
+<h2 id="输入法安装"><a href="#输入法安装" class="headerlink" title="输入法安装"></a>输入法安装</h2><p>推荐使用fcitx输入框架。</p>
+<p>执行</p>
+<pre><code class="hljs shell">sudo pacman -S fcitx-im fcitx-configtool fcitx-sogoupinyin fcitx-googlepinyin</code></pre>
+<p>然后打开文件（没有就创建一个）：</p>
+<pre><code class="hljs shell">vim ~/.pam_environment</code></pre>
+<p>然后在里面输入一下内容：</p>
+<pre><code class="hljs shell">GTK_IM_MODULE=fcitx
+QT_IM_MODULE=fcitx
+XMODIFIERS=@im=fcitx</code></pre>
+<p>然后打开<code>fcitx-configtool</code>进行配置输入法和快捷键即可。</p>
+<hr>
+<h1 id="美化"><a href="#美化" class="headerlink" title="美化"></a>美化</h1><p>我们的美化是基于gnome桌面。</p>
+<p>首先安装一些必要的扩展。</p>
+<h2 id="扩展安装和配置"><a href="#扩展安装和配置" class="headerlink" title="扩展安装和配置"></a>扩展安装和配置</h2><h2 id="安装主题"><a href="#安装主题" class="headerlink" title="安装主题"></a>安装主题</h2><p>在<a target="_blank" rel="noopener" href="https://www.gnome-look.org/">gnome-look</a>中，找到自己喜欢的主题并下载。这里一<a href="">arc-theme</a>为例说明。</p>
+<p>到<a href=""></a>下载，选择</p>
+<h2 id="安装图标"><a href="#安装图标" class="headerlink" title="安装图标"></a>安装图标</h2><hr>
+<hr>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/linux/">linux</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/linux/">linux</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/08/05/archlinux%E5%AE%89%E8%A3%85mysql%E5%8F%8A%E9%85%8D%E7%BD%AE/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Archlinux安装mysql及配置</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/07/11/CFD%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95%E6%B1%87%E6%80%BB/">
+                        <span class="hidden-mobile">CFD常用算法汇总</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    document.addEventListener('DOMContentLoaded', function() {
+      window.NProgress && window.NProgress.inc();
+    })
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>

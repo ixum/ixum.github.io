@@ -1,0 +1,617 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="CFD">
+  <meta name="author" content="田同学">
+  <meta name="keywords" content="">
+  <title>布拉休斯方程数值解 - 田同学de芥末</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.8.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>田同学de小站</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="布拉休斯方程数值解">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-04-02 13:53" pubdate>
+        April 2, 2020 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      18
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">布拉休斯方程数值解</h1>
+            
+            <div class="markdown-body">
+              <p>利用四阶龙格库塔方法求解布拉休斯方程。</p>
+<a id="more"></a>
+<h1 id="布拉休斯方程数值求解"><a href="#布拉休斯方程数值求解" class="headerlink" title="布拉休斯方程数值求解"></a>布拉休斯方程数值求解</h1><h2 id="控制方程"><a href="#控制方程" class="headerlink" title="控制方程"></a>控制方程</h2><p>布拉休斯方程如下：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+f f^{''}+2f^{'''}=0 \\
+f(0)=f^{'}(0)=0;f^{''}(0)=1
+\end{equation}</script><p>这是一个非线性常微分方程，下面我们利用四阶龙格库塔方法来求解该方程。</p>
+<h2 id="数值求解"><a href="#数值求解" class="headerlink" title="数值求解"></a>数值求解</h2><p>我们引入新的变量：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+y_1=f \\
+y_2=f^{'} \\
+y_3=f^{''}
+\end{equation}</script><p>则布拉休斯方程可以等价的表示乘如下：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\left\{
+\begin{aligned}
+&y_1^{'} = y_2 \\
+&y_2^{'} = y_3 \\
+&y_3^{'} = -\frac{1}{2}y_1 y_3
+\end{aligned}
+\right .
+\end{equation}</script><p>利用四阶龙哥库塔有：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\left\{
+\begin{aligned}
+&y_{n+1}=y_n+\frac{h}{6}(K_1+2K_2+2K_3+K_4) \\
+&K_1 = f(x_n, y_n) \\
+&K_2 = f(x_n+\frac{h}{2}, y_n+\frac{h}{2}K_1) \\
+&K_3 = f(x_n+\frac{h}{2}, y_n+\frac{h}{2}K_2) \\
+&K_4 = f(x_n+h, y_n+h K_3) \\
+\end{aligned}
+\right .
+\end{equation}</script><p>对于（3）式中的第一式利用龙哥库塔方法，有：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\left\{
+\begin{aligned}
+&y_1^{n+1}=y_1^{n}+\frac{h}{6}(K_{11}+2K_{12}+2K_{13}+K_{14}) \\
+&K_{11} = y_2^{n} \\
+&K_{12} = y_2^{n} + \frac{h}{2}K_{11} \\
+&K_{13} = y_2^{n} + \frac{h}{2}K_{12} \\
+&K_{14} = y_2^{n} + h K_{13} \\
+\end{aligned}
+\right .
+\end{equation}</script><p>同理，对于(3)中的第二式：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\left\{
+\begin{aligned}
+&y_2^{n+1}=y_2^{n}+\frac{h}{6}(K_{21}+2K_{22}+2K_{23}+K_{24}) \\
+&K_{21} = y_3^{n} \\
+&K_{22} = y_3^{n} + \frac{h}{2}K_{21} \\
+&K_{23} = y_3^{n} + \frac{h}{2}K_{22} \\
+&K_{24} = y_3^{n} + h K_{23} \\
+\end{aligned}
+\right .
+\end{equation}</script><p>对于(3)中的第三式：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\left\{
+\begin{aligned}
+&y_3^{n+1}=y_3^{n}+\frac{h}{6}(K_{31}+2K_{32}+2K_{33}+K_{34}) \\
+&K_{31} = -\frac{1}{2}y_1^{n}y_3^{n} \\
+&K_{32} = -\frac{1}{2}(y_1^{n} + \frac{h}{2}K_{31})(y_3^{n} + \frac{h}{2}K_{31}) \\
+&K_{33} = -\frac{1}{2}(y_1^{n} + \frac{h}{2}K_{32})(y_3^{n} + \frac{h}{2}K_{32}) \\
+&K_{34} = -\frac{1}{2}(y_1^{n} + hK_{33})(y_3^{n} + hK_{33}) \\
+\end{aligned}
+\right .
+\end{equation}</script><h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>编写代码：</p>
+<pre><code class="hljs python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+
+<span class="hljs-comment"># 四阶龙格库塔（RK4）</span>
+L = <span class="hljs-number">10</span>     <span class="hljs-comment"># length of boundary</span>
+h = <span class="hljs-number">0.1</span>    <span class="hljs-comment"># step length</span>
+N = <span class="hljs-built_in">int</span>(L / h)
+y1 = np.zeros(N)
+y2 = np.zeros(N)
+y3 = np.zeros(N)
+y3[<span class="hljs-number">0</span>] = <span class="hljs-number">0.33206</span>   <span class="hljs-comment"># test value</span>
+
+<span class="hljs-keyword">for</span> ii <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(N-<span class="hljs-number">1</span>):
+    k11 = y2[ii]
+    k21 = y3[ii]
+    k31 = -<span class="hljs-number">1</span> / <span class="hljs-number">2</span> * y1[ii] * y3[ii]
+    k12 = y2[ii] + h / <span class="hljs-number">2</span> * k21
+    k22 = y3[ii] + h / <span class="hljs-number">2</span> * k31
+    k32 = -<span class="hljs-number">1</span> / <span class="hljs-number">2</span> * (y1[ii] + h / <span class="hljs-number">2</span> * k11) * (y3[ii] + h / <span class="hljs-number">2</span> * k31)
+    k13 = y2[ii] + h / <span class="hljs-number">2</span> * k22
+    k23 = y3[ii] + h / <span class="hljs-number">2</span> * k32
+    k33 = -<span class="hljs-number">1</span> / <span class="hljs-number">2</span> * (y1[ii] + h / <span class="hljs-number">2</span> * k12) * (y3[ii] + h / <span class="hljs-number">2</span> * k32)
+    k14 = y2[ii] + h * k22
+    k24 = y3[ii] + h * k32
+    k34 = -<span class="hljs-number">1</span> / <span class="hljs-number">2</span> * (y1[ii] + h * k13) * (y3[ii] + h * k33)
+    y1[ii+<span class="hljs-number">1</span>] = y1[ii] + h / <span class="hljs-number">6</span> * (k11 + <span class="hljs-number">2</span> * k12 + <span class="hljs-number">2</span> * k13 + k14)
+    y2[ii+<span class="hljs-number">1</span>] = y2[ii] + h / <span class="hljs-number">6</span> * (k21 + <span class="hljs-number">2</span> * k22 + <span class="hljs-number">2</span> * k23 + k24)
+    y3[ii+<span class="hljs-number">1</span>] = y3[ii] + h / <span class="hljs-number">6</span> * (k31 + <span class="hljs-number">2</span> * k32 + <span class="hljs-number">2</span> * k33 + k34)</code></pre>
+<p>利用上面计算的结果，绘制图像如下：</p>
+<pre><code class="hljs python"><span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt
+x = np.arange(N) * h
+fig = plt.figure(figsize=(<span class="hljs-number">16</span>, <span class="hljs-number">9</span>))
+plt.plot(x, y2, <span class="hljs-string">&#x27;--&#x27;</span>, color=<span class="hljs-string">&#x27;red&#x27;</span>)
+<span class="hljs-comment"># plt.xlabel(&#x27;$\eta=(u_e/\nu x)^0.5$&#x27;)</span>
+<span class="hljs-comment"># plt.ylabel(&quot;$f^&#x27;=u/u_e$&quot;)</span>
+plt.xlabel(<span class="hljs-string">&#x27;x&#x27;</span>)
+plt.ylabel(<span class="hljs-string">&#x27;f&#x27;</span>)
+plt.grid()
+plt.show()</code></pre>
+<p>图像如下：</p>
+<p><img src="/home/mx/Apps/blog/static/tmp/f.png" srcset="/img/loading.gif" alt=""></p>
+<p>在上面计算中，我们给出一个尝试值$y3[0]=0.33206$。但是，其实我们并不知道$f^{‘’}(0)$的值。因此采用打靶的思想进行确定。具体思路是给出一个$f^{‘’}(0)$的值，计算$f$的值，根据插值来修正。（我们知道精确值为$f(\infty)=1$）。具体代码如下：</p>
+<pre><code class="hljs Python"><span class="hljs-comment"># 采用修正算法来自动寻找初始值。</span>
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">RK4</span>(<span class="hljs-params">ic</span>):</span>
+    <span class="hljs-comment"># 四阶龙格库塔（RK4）</span>
+    L = <span class="hljs-number">40</span>      <span class="hljs-comment"># length of boundary</span>
+    h = <span class="hljs-number">0.1</span>     <span class="hljs-comment"># step length</span>
+    N = <span class="hljs-built_in">int</span>(L / h)
+    y1 = np.zeros(N)
+    y2 = np.zeros(N)
+    y3 = np.zeros(N)
+    y3[<span class="hljs-number">0</span>] = ic
+
+    <span class="hljs-keyword">for</span> ii <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(N-<span class="hljs-number">1</span>):
+        k11 = y2[ii]
+        k21 = y3[ii]
+        k31 = -<span class="hljs-number">1</span> / <span class="hljs-number">2</span> * y1[ii] * y3[ii]
+        k12 = y2[ii] + h / <span class="hljs-number">2</span> * k21
+        k22 = y3[ii] + h / <span class="hljs-number">2</span> * k31
+        k32 = -<span class="hljs-number">1</span> / <span class="hljs-number">2</span> * (y1[ii] + h / <span class="hljs-number">2</span> * k11) * (y3[ii] + h / <span class="hljs-number">2</span> * k31)
+        k13 = y2[ii] + h / <span class="hljs-number">2</span> * k22
+        k23 = y3[ii] + h / <span class="hljs-number">2</span> * k32
+        k33 = -<span class="hljs-number">1</span> / <span class="hljs-number">2</span> * (y1[ii] + h / <span class="hljs-number">2</span> * k12) * (y3[ii] + h / <span class="hljs-number">2</span> * k32)
+        k14 = y2[ii] + h * k22
+        k24 = y3[ii] + h * k32
+        k34 = -<span class="hljs-number">1</span> / <span class="hljs-number">2</span> * (y1[ii] + h * k13) * (y3[ii] + h * k33)
+        y1[ii+<span class="hljs-number">1</span>] = y1[ii] + h / <span class="hljs-number">6</span> * (k11 + <span class="hljs-number">2</span> * k12 + <span class="hljs-number">2</span> * k13 + k14)
+        y2[ii+<span class="hljs-number">1</span>] = y2[ii] + h / <span class="hljs-number">6</span> * (k21 + <span class="hljs-number">2</span> * k22 + <span class="hljs-number">2</span> * k23 + k24)
+        y3[ii+<span class="hljs-number">1</span>] = y3[ii] + h / <span class="hljs-number">6</span> * (k31 + <span class="hljs-number">2</span> * k32 + <span class="hljs-number">2</span> * k33 + k34)
+    <span class="hljs-keyword">return</span> y2[-<span class="hljs-number">1</span>]
+
+epsilon = <span class="hljs-number">1e-9</span>
+<span class="hljs-comment"># 开始迭代测试修正</span>
+ic = <span class="hljs-number">1</span>
+alpha = <span class="hljs-number">0.3</span>
+<span class="hljs-keyword">for</span> ii <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">20</span>):
+    print(ic)
+    y3 = RK4(ic)
+    error = y3 - <span class="hljs-number">1.0</span>
+    <span class="hljs-keyword">if</span> np.<span class="hljs-built_in">abs</span>(error) &lt; epsilon:
+        <span class="hljs-keyword">break</span>
+    <span class="hljs-keyword">else</span>:
+        ic -= alpha * error</code></pre>
+<p>运行上面的程序，我们很容易得到$f^{‘’}(0)$从初始值（尝试值1）降低到正确值0.33205。</p>
+<pre><code class="hljs shell">1
+0.6743617428806606
+0.4932473770697171
+0.4026815319928927
+0.36152169076308643
+0.34402498259791453
+0.3368568758014264
+0.3339705495653165
+0.33281689350656146
+0.33235717556926003
+0.3321742068752738
+0.3321014204467237
+0.33207247103980964
+0.3320609578581748
+0.3320563792056564
+0.33205455835342595
+0.33205383423498663
+0.33205354626735756
+0.33205343174839597
+0.3320533862065114</code></pre>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/cfd/">cfd</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/09/20/%E7%A8%8B%E5%BA%8F%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%85%A5%E9%97%A8/">
+                        <span class="hidden-mobile">程序性能优化入门</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    document.addEventListener('DOMContentLoaded', function() {
+      window.NProgress && window.NProgress.inc();
+    })
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- KaTeX -->
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.12.0/katex.min.css" />
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,761 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="CFD">
+  <meta name="author" content="田同学">
+  <meta name="keywords" content="">
+  <title>GNU大型项目构建和覆盖率生成 - 田同学de芥末</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.8.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>田同学de小站</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="GNU大型项目构建和覆盖率生成">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2019-05-03 10:54" pubdate>
+        May 3, 2019 am
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.4k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      30
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">GNU大型项目构建和覆盖率生成</h1>
+            
+            <div class="markdown-body">
+              <p>本文介绍如何使用autotools构建一个GNU项目。</p>
+<a id="more"></a>
+<h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>在开始正文之前，请允许我先说明一下本文的目的和写作的动机，好让读者不惑。</p>
+<p>我们知道，在Linux环境中，很多软件的组织都遵循GNU软件标准。不论是自己开发GNU软件还是阅读别人写好的源程序，能了解、熟悉GNU项目的构建方式，对我们的工作会起到事半功倍的效果。本文的目的，就是从零开始，告诉大家怎么构建一个GNU项目，如何阅读GNU源程序。</p>
+<p>文章会涉及到的工具有：</p>
+<ul>
+<li>automake</li>
+<li>autoconf</li>
+<li>aclocal</li>
+<li>gcc、gfotran</li>
+<li>makefile</li>
+<li>libtool</li>
+<li>gcov、 gcovr</li>
+</ul>
+<p>在阅读本文之前，上述工具需要安装部署完成，同时期望读者对一下的知识和技能有一定的了解和掌握：</p>
+<blockquote>
+<ol>
+<li>C、C++、Fortran语言</li>
+<li>基本的编译、链接过程和原理</li>
+<li>Makefile基本知识</li>
+<li>Linux-she’ll基本命令</li>
+</ol>
+</blockquote>
+<p>不要被前面的要求吓到，笔者也是从对上面知识一无所知，经过两三周时间摸索，写出了这篇文章的。文章内容涉及到的知识不够深刻，但是基本上可以帮助像半个月前的笔者一样茫然的入门者。文章中不严谨的表述或者表述、理解方面的错误，欢迎大家留言指正。</p>
+<p>另外，本文只是告诉大家如何快速的完成一个GNU项目。其中涉及到的autotools工具和相关语言的细节，请大家阅读文章后面的链接文章。</p>
+<p>好了，我们开始正文！</p>
+<!-- more -->
+<hr>
+<h1 id="项目描述"><a href="#项目描述" class="headerlink" title="项目描述"></a>项目描述</h1><p>这一章节，主要说明我们的目的：</p>
+<p>我们最终要完成一个<code>deep</code>风格的项目组织。项目使用c和Fortran混合编程，利用GNU-autotools来完成项目构建，利用gcov完成项目覆盖率分析。最后形成通过覆盖率分析优化后的项目发布包。该发布包能够直接发布在网络，供其他用户下载、安装并使用。</p>
+<p>项目最终的目录如下：</p>
+<pre><code class="hljs shell">➜  csdemo tree
+.
+├── AUTHORS
+├── auto.sh
+├── ChangeLog
+├── data
+│   └── thch
+│       └── JANAF
+├── doc
+│   └── README
+├── examples
+├── makeconfig
+│   └── make.global
+├── NEWS
+├── preprocessor
+├── README
+├── src
+│   ├── alge
+│   │   ├── alge.c
+│   │   └── alge.h
+│   ├── apps
+│   │   └──csrun.c
+│   ├── base
+│   │   ├── addfld.f90
+│   │   └── paramx.f90
+│   ├── bft
+│   │   ├── bft.c
+│   │   └──bft.h
+│   ├── cdo
+│   │   ├── cdo.c
+│   │   └──cdo.h
+│   ├── cogz
+│   │   └── matmul.f90
+│   ├── comb
+│   │   ├── comb.c
+│   │   └──comb.h
+│   └── lib
+└── test</code></pre>
+<p>读者可以在<a target="_blank" rel="noopener" href="https://github.com/ixum/static/tree/master/sourceForge/csdemo">这里</a>下载源码。</p>
+<p>下面我们就通过几个章节的内容，详细的说明如何从零开始生成这个项目。</p>
+<hr>
+<h1 id="项目构建"><a href="#项目构建" class="headerlink" title="项目构建"></a>项目构建</h1><p>我们将这个项目放置在<code>csdemo</code>路径下面：</p>
+<p>这里：data路径下面存放项目的数据文件，doc为项目的说明文档，examples存放用户案例，test存放测试用例，preprocessor存放前处理相关程序，src存放主题程序代码。在src下面alge是c语言文件，apps是用户可执行程序，其他子文件夹分别完成一些特定的功能。</p>
+<p>将下载到的源码分别复制进对应的路径得到如上文的项目组织。下一步我们就要开始进行项目构建。</p>
+<p>项目的构建一般可以通过一下几步来完成：</p>
+<ol>
+<li>在每个需要编译的子路径下面编写编译规则<code>Makefile.am</code>文件。</li>
+<li>在根目录（项目根目录）下执行<code>autoscan</code>命令，形成<code>configure.scan</code>文件</li>
+<li>将<code>configure.scan</code>文件命名为<code>configure.ac</code></li>
+<li>按照规则修改<code>configure.ac</code>文件</li>
+<li>执行<code>aclocal</code>文件，形成<code>m4</code>宏命令（有时需要手动编写<code>m4</code>宏）</li>
+<li>执行<code>autoheader</code>命令生成头文件</li>
+<li>执行<code>autoconf</code>形成<code>config</code>文件</li>
+<li>执行<code>libtoolize --automake</code>声明<code>automake</code>宏（这一步按情况选择执行）</li>
+<li>执行<code>automake -a</code>命令，生成<code>makefile.in</code>文件</li>
+<li>执行<code>./configure</code>命令，生成<code>makefile</code>文件</li>
+</ol>
+<p>至此，一个典型的GNU项目构建完成。至于每一步怎么操作，后文会详细给出。</p>
+<p>在完成上面操作之后，我们就可以发布自己的软件，用户通过：</p>
+<blockquote>
+<p>  ./configure</p>
+<p>  make</p>
+<p>  make install</p>
+</blockquote>
+<p>轻松完成软件的安装和配置。后面的三个命令是不是很熟悉。</p>
+<h2 id="编译规则"><a href="#编译规则" class="headerlink" title="编译规则"></a>编译规则</h2><p>坚持往下走。我们先来完成第一步，源码的编译。这一步您需要对gcc编译和链接有一定的了解，同时如果您知道目标文件、静态库、动态库就更好了，他能帮助我们更好的完成本节的内容。</p>
+<p>我们平时对于单个或者少量的源文件直接用<code>gcc</code>编译链接，中性项目我们可以手写<code>Makefile</code>，但是对于多文件，手写<code>Makefile</code>仍然很繁琐，这个时候我们就可以使用<code>autotools</code>套件中的<code>automake</code>来自动生成<code>makefile</code>文件。</p>
+<ol>
+<li>我们在根目录下建立文件<code>Makefile.am</code>，编写如下内容：</li>
+</ol>
+<pre><code class="hljs makefile"><span class="hljs-comment">## ./Makefile.am   ## 双#表示注释</span>
+SUBDIRS          = src      <span class="hljs-comment">## 递归子文件夹</span>
+<span class="hljs-comment">## 需要打包的文件夹和文件</span>
+EXTRA_DIST       = doc data exxamples preprocessor test</code></pre>
+<ol>
+<li>进入到<code>src</code>下面，建立<code>Makefile.am</code>，编写如下内容：</li>
+</ol>
+<pre><code class="hljs Makefile"><span class="hljs-comment">##./src/Makefile.am</span>
+SUBDIRS          = alge base bft cdo comb cogz apps
+EXTRA_DIST       = lib</code></pre>
+<ol>
+<li>进入到<code>src/alge</code>下面，建立<code>Makefile.am</code>，编写如下内容：</li>
+</ol>
+<pre><code class="hljs Makefile"><span class="hljs-comment">##./src/alge/Makefile.am</span>
+noinst_LIBRARIES   = libalge.a   <span class="hljs-comment">## 生成静态库</span>
+libalge_a_SOURCES = alge.c
+
+AM_CPPFLAGS      = -I<span class="hljs-variable">$(top_srcdir)</span>/src/alge</code></pre>
+<ol>
+<li>进入到<code>src/apps</code>下面，建立<code>Makefile.am</code>，编写如下内容：</li>
+</ol>
+<pre><code class="hljs Makefile"><span class="hljs-comment">##./src/apps/Makefile.am</span>
+bin_PROGRAMS  = csrun
+csrun_SOURCES = csrun.c
+
+<span class="hljs-comment">## 头文件</span>
+csrun_CPPFLAGS    =      \
+-I<span class="hljs-variable">$(top_srcdir)</span>/src/alge \
+-I<span class="hljs-variable">$(top_srcdir)</span>/src/bft  \
+-I<span class="hljs-variable">$(top_srcdir)</span>/src/cdo  \
+-I<span class="hljs-variable">$(top_srcdir)</span>/src/comb 
+
+<span class="hljs-comment">## 依赖静态库</span>
+csrun_LDADD      = \
+<span class="hljs-variable">$(top_srcdir)</span>/src/alge/libalge.a \
+<span class="hljs-variable">$(top_srcdir)</span>/src/bft/libbft.a   \
+<span class="hljs-variable">$(top_srcdir)</span>/src/cdo/libcdo.a   \
+<span class="hljs-variable">$(top_srcdir)</span>/src/comb/libcomb.a \
+<span class="hljs-variable">$(top_srcdir)</span>/src/base/libbase.a \
+<span class="hljs-variable">$(top_srcdir)</span>/src/cogz/libcogz.a 
+
+AM_CFLAGS = -lgfortran</code></pre>
+<ol>
+<li>进入到<code>src/base</code>下面，建立<code>Makefile.am</code>，编写如下内容：</li>
+</ol>
+<pre><code class="hljs Makefile"><span class="hljs-comment">##./src/base/Makefile.am</span>
+noinst_LIBRARIES = libbase.a
+libbase_a_SOURCES = addfld.f90
+
+AM_FCFLAGS      = -I<span class="hljs-variable">$(top_srcdir)</span>/src/base</code></pre>
+<ol>
+<li>进入到<code>src/bft</code>下面，建立<code>Makefile.am</code>，编写如下内容：</li>
+</ol>
+<pre><code class="hljs Makefile"><span class="hljs-comment">##./src/bft/Makefile.am</span>
+noinst_LIBRARIES   = libbft.a
+libbft_a_SOURCES = bft.c
+
+AM_CPPFLAGS      = -I<span class="hljs-variable">$(top_srcdir)</span>/src/bft</code></pre>
+<ol>
+<li>进入到<code>src/cdo</code>下面，建立<code>Makefile.am</code>，编写如下内容：</li>
+</ol>
+<pre><code class="hljs Makefile"><span class="hljs-comment">##./src/cdo/Makefile.am</span>
+noinst_LIBRARIES   = libcdo.a
+libcdo_a_SOURCES = cdo.c
+
+AM_CPPFLAGS      = -I<span class="hljs-variable">$(top_srcdir)</span>/src/cdo</code></pre>
+<ol>
+<li>进入到<code>src/cogz</code>下面，建立<code>Makefile.am</code>，编写如下内容：</li>
+</ol>
+<pre><code class="hljs Makefile"><span class="hljs-comment">##./src/cogz/Makefile.am</span>
+noinst_LIBRARIES = libcogz.a
+libcogz_a_SOURCES = matmul.f90
+
+</code></pre>
+<ol>
+<li>进入到<code>src/comb</code>下面，建立<code>Makefile.am</code>，编写如下内容：</li>
+</ol>
+<pre><code class="hljs Makefile"><span class="hljs-comment">##./src/comb/Makefile.am</span>
+noinst_LIBRARIES   = libcomb.a
+libcomb_a_SOURCES = comb.c
+
+AM_CPPFLAGS      = -I<span class="hljs-variable">$(top_srcdir)</span>/src/comb
+
+</code></pre>
+<p>为了编写方便，本文案例中都是用生成静态库的方式来完成模块目录的编译。当然，用户也可以生成动态库或者目标文件（<code>automake</code>文档中没有明确的对目标文件的支持，但其实可以使用<code>automake</code>生成目标文件）。</p>
+<p>至此，我们完成了项目构建十步中的第一步。（不用怕，后面的基本都是输入命令，不用编写大量文件。）</p>
+<h2 id="构建过程"><a href="#构建过程" class="headerlink" title="构建过程"></a>构建过程</h2><ol>
+<li>在完成第一步工作的基础上，在根目录执行：</li>
+</ol>
+<pre><code class="hljs shell">autoscan
+
+</code></pre>
+<p>在根目录生成两个文件：<code>configure.scan</code>、<code>autoscan.log</code>。后者在我们执行这条命令出错时帮助我们查找问题，这里主要关注第一个文件。</p>
+<ol>
+<li>将<code>configure.scan</code>重命名为<code>configure.ac</code></li>
+<li>打开<code>configure.ac</code>文件</li>
+</ol>
+<pre><code class="hljs Makefile"><span class="hljs-comment">#                                               -*- Autoconf -*-</span>
+<span class="hljs-comment"># Process this file with autoconf to produce a configure script.</span>
+
+AC_PREREQ([2.69])
+AC_INIT([FULL-PACKAGE-NAME], [VERSION], [BUG-REPORT-ADDRESS])
+AC_CONFIG_SRCDIR([src/cdo/cdo.h])
+AC_CONFIG_HEADERS([config.h])
+
+<span class="hljs-comment"># Checks for programs.</span>
+AC_PROG_CC
+AC_PROG_MAKE_SET
+
+<span class="hljs-comment"># Checks for libraries.</span>
+<span class="hljs-comment"># <span class="hljs-doctag">FIXME:</span> Replace `main&#x27; with a function in `-lgfortran&#x27;:</span>
+AC_CHECK_LIB([gfortran], [main])
+
+<span class="hljs-comment"># Checks for header files.</span>
+
+<span class="hljs-comment"># Checks for typedefs, structures, and compiler characteristics.</span>
+
+<span class="hljs-comment"># Checks for library functions.</span>
+
+AC_CONFIG_FILES([Makefile
+                 src/Makefile
+                 src/alge/Makefile
+                 src/apps/Makefile
+                 src/base/Makefile
+                 src/bft/Makefile
+                 src/cdo/Makefile
+                 src/cogz/Makefile
+                 src/comb/Makefile])
+AC_OUTPUT
+
+</code></pre>
+<ol>
+<li>修改文件成如下（修改的地方打上了注释，一个<code>#</code>开始为注释）：</li>
+</ol>
+<pre><code class="hljs awk"><span class="hljs-comment">#                                               -*- Autoconf -*-</span>
+<span class="hljs-comment"># Process this file with autoconf to produce a configure script.</span>
+
+AC_PREREQ([<span class="hljs-number">2.69</span>])
+AC_INIT(csrun, <span class="hljs-number">1.0</span>, adi@adi.com)  <span class="hljs-comment"># 三个参数分别为：项目名称、版本号、bug提交邮箱</span>
+AC_CONFIG_SRCDIR([src<span class="hljs-regexp">/apps/</span>csrun.c])
+AC_CONFIG_HEADERS([config.h])
+AM_INIT_AUTOMAKE[foreign tar-pax]  <span class="hljs-comment"># 这行必须添加，用来指明与automake联用</span>
+<span class="hljs-comment"># Checks for programs.</span>
+AC_PROG_CC                       <span class="hljs-comment"># 查询c编译器</span>
+AC_PROG_FC                       <span class="hljs-comment"># 查询Fortran编译器</span>
+
+<span class="hljs-comment"># Checks for libraries.</span>
+
+<span class="hljs-comment"># Checks for header files.</span>
+AC_PROG_RANLIB                  <span class="hljs-comment"># 启用静态库编译</span>
+
+<span class="hljs-comment"># Checks for typedefs, structures, and compiler characteristics.</span>
+
+<span class="hljs-comment"># Checks for library functions.</span>
+
+AC_CONFIG_FILES([Makefile
+                 src/Makefile
+				 src<span class="hljs-regexp">/apps/</span>Makefile
+				 src<span class="hljs-regexp">/alge/</span>Makefile
+                 src<span class="hljs-regexp">/base/</span>Makefile
+                 src<span class="hljs-regexp">/bft/</span>Makefile
+				 src<span class="hljs-regexp">/cdo/</span>Makefile
+                 src<span class="hljs-regexp">/comb/</span>Makefile
+				 src<span class="hljs-regexp">/cogz/</span>Makefile])  <span class="hljs-comment"># 这里需要指明生成Makefile的路径</span>
+AC_OUTPUT
+
+</code></pre>
+<ol>
+<li>执行<code>aclocal</code>命令，这个命令会生成一些<code>m4</code>文件。暗示不用过多关注它们。</li>
+<li>执行<code>autoheader</code>，生成<code>config.h</code>文件</li>
+<li>执行<code>autoconf</code>，生成<code>configure</code>文件</li>
+<li>执行<code>automake -a</code>，生成<code>Makefile.in</code>文件（每个makefile.am对应一个Makefile.in）</li>
+<li>执行<code>./configure</code></li>
+<li>执行<strong>三部曲</strong>.</li>
+</ol>
+<p>至此，我们的项目已经<strong>构建完成</strong>！！</p>
+<hr>
+<h1 id="覆盖率分析"><a href="#覆盖率分析" class="headerlink" title="覆盖率分析"></a>覆盖率分析</h1><p>在本部分正文展开之前，读者可能需要知道什么是覆盖率，为什么需要覆盖率分析等。这部分的知识可以参考相关文章。</p>
+<p>我们利用<code>gcc</code>提供的<code>gcov</code>和Python提供的<code>gcovr</code>两个工具来分析覆盖率。对于单个文件，直接执行</p>
+<pre><code class="hljs shell">gcov *.c
+
+</code></pre>
+<p>就可以得到其覆盖率（具体的生成流程，请参考笔者关于覆盖率的博文。）</p>
+<p>对于大型的复杂项目，生成覆盖率需要将<code>gcov</code>和<code>automake</code>结合使用。我们直接在编译规则里面完成对覆盖率选项的添加。</p>
+<p>即，在上文中每一个<code>Makefile.am</code>文件中添加如下命令：</p>
+<pre><code class="hljs Makefile">AM_CFLAGS += -fprofile-arcs -ftest-coverage   <span class="hljs-comment">## for c compile</span>
+AM_FCFLAGS += -fprofile-arcs -ftest-coverage  <span class="hljs-comment">## for fortran compile</span>
+
+</code></pre>
+<p>再执行:</p>
+<pre><code class="hljs shell">automake -a
+./configure
+make
+
+</code></pre>
+<p>这个时候就会看到在相应的源码路径生成对应的<code>.gcon</code>等文件。然后在每个目录下面执行：</p>
+<pre><code class="hljs shell">gcov *.c
+
+</code></pre>
+<p>就可以生成覆盖率文件。</p>
+<p>但是，我们这样做，需要手动到每个子路径下面输入这个命令，比较麻烦，借助makefile将其简化。</p>
+<p>在每个Makefile.am中添加如下语句：</p>
+<pre><code class="hljs makefile"><span class="hljs-keyword">export</span> MAKEINCLUDE=$&#123;top_srcdir&#125;/makeconfig/make.global
+<span class="hljs-keyword">include</span> $&#123;MAKEINCLUDE&#125;
+
+<span class="hljs-section">cleanall: cleanallsubdirs</span>
+	-rm -f *.gcda *.gcov *.gcno
+
+<span class="hljs-section">gcov: gcovsubdirs</span>
+	@echo <span class="hljs-string">&quot;generating base coverage ...&quot;</span>
+	gcov -f *.c *.f90
+
+<span class="hljs-section">gcovr: gcovrsubdirs</span>
+	gcovr -r . --html --html-details -o coverage.html
+</code></pre>
+<p>这个时候makefile会帮我们自动递归相关的文件夹。</p>
+<hr>
+<hr>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/linux/">linux</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/linux/">linux</a>
+                    
+                      <a class="hover-with-bg" href="/tags/gnu/">gnu</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/05/17/autotools%E5%B7%A5%E5%85%B7%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Autotools工具简明教程</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    document.addEventListener('DOMContentLoaded', function() {
+      window.NProgress && window.NProgress.inc();
+    })
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>
