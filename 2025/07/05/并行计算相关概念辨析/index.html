@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="并行计算 vs. 并行分布式计算1. 并行计算（Parallel Computing）定义：并行计算是指在单个计算机系统（如多核CPU、GPU或超算节点）内，使用多个计算资源同时执行多个任务或子任务，以加速计算过程。   关键特点：    共享内存架构：多个处理器&#x2F;核心通过共享内存（如RAM）交换数据。   紧密耦合：计算单元之间通信延迟低（如超算节点内的CPU&#x2F;GPU互联）。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="并行计算相关概念辨析">
+<meta property="og:url" content="http://example.com/2025/07/05/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%E8%BE%A8%E6%9E%90/index.html">
+<meta property="og:site_name" content="Code Vortex">
+<meta property="og:description" content="并行计算 vs. 并行分布式计算1. 并行计算（Parallel Computing）定义：并行计算是指在单个计算机系统（如多核CPU、GPU或超算节点）内，使用多个计算资源同时执行多个任务或子任务，以加速计算过程。   关键特点：    共享内存架构：多个处理器&#x2F;核心通过共享内存（如RAM）交换数据。   紧密耦合：计算单元之间通信延迟低（如超算节点内的CPU&#x2F;GPU互联）。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-07-05T09:38:36.000Z">
+<meta property="article:modified_time" content="2025-07-05T11:55:40.789Z">
+<meta property="article:author" content="baoweee">
+<meta property="article:tag" content="HPC">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>并行计算相关概念辨析</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tag</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ixum">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2025/07/05/hello%20world/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/07/05/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%E8%BE%A8%E6%9E%90/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/07/05/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%E8%BE%A8%E6%9E%90/&text=并行计算相关概念辨析"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/07/05/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%E8%BE%A8%E6%9E%90/&title=并行计算相关概念辨析"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/07/05/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%E8%BE%A8%E6%9E%90/&is_video=false&description=并行计算相关概念辨析"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=并行计算相关概念辨析&body=Check out this article: http://example.com/2025/07/05/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%E8%BE%A8%E6%9E%90/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/07/05/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%E8%BE%A8%E6%9E%90/&title=并行计算相关概念辨析"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/07/05/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%E8%BE%A8%E6%9E%90/&title=并行计算相关概念辨析"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/07/05/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%E8%BE%A8%E6%9E%90/&title=并行计算相关概念辨析"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/07/05/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%E8%BE%A8%E6%9E%90/&title=并行计算相关概念辨析"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/07/05/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%E8%BE%A8%E6%9E%90/&name=并行计算相关概念辨析&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/07/05/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%E8%BE%A8%E6%9E%90/&t=并行计算相关概念辨析"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97-vs-%E5%B9%B6%E8%A1%8C%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97"><span class="toc-number">1.</span> <span class="toc-text">并行计算 vs. 并行分布式计算</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%EF%BC%88Parallel-Computing%EF%BC%89"><span class="toc-number">1.1.</span> <span class="toc-text">1. 并行计算（Parallel Computing）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%B9%B6%E8%A1%8C%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%EF%BC%88Parallel-Distributed-Computing%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">2. 并行分布式计算（Parallel Distributed Computing）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%B9%B6%E8%A1%8C%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%EF%BC%9F"><span class="toc-number">1.3.</span> <span class="toc-text">为什么需要并行分布式计算？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%AA%81%E7%A0%B4%E5%8D%95%E6%9C%BA%E6%80%A7%E8%83%BD%E6%9E%81%E9%99%90"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. 突破单机性能极限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%8F%90%E9%AB%98%E6%95%88%E7%8E%87%E4%B8%8E%E9%99%8D%E4%BD%8E%E6%88%90%E6%9C%AC"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. 提高效率与降低成本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%A4%84%E7%90%86%E5%9C%B0%E7%90%86%E5%88%86%E5%B8%83%E7%9A%84%E6%95%B0%E6%8D%AE%E4%B8%8E%E8%AE%A1%E7%AE%97"><span class="toc-number">1.3.3.</span> <span class="toc-text">3. 处理地理分布的数据与计算</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E9%80%82%E5%BA%94%E7%8E%B0%E4%BB%A3%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.3.4.</span> <span class="toc-text">4. 适应现代应用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E6%AF%94%E6%80%BB%E7%BB%93"><span class="toc-number">1.4.</span> <span class="toc-text">对比总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AA%E6%9D%A5%E6%96%B9%E5%90%91"><span class="toc-number">1.5.</span> <span class="toc-text">未来方向</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E8%AF%B4%E6%98%8E"><span class="toc-number">1.6.</span> <span class="toc-text">案例说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E7%BA%BF%E7%A8%8B%E7%9A%84%E8%AF%B4%E6%98%8E"><span class="toc-number">1.7.</span> <span class="toc-text">关于线程的说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B7%E4%BD%93%E6%9E%B6%E6%9E%84%E6%A1%88%E4%BE%8B"><span class="toc-number">1.8.</span> <span class="toc-text">具体架构案例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%85%B3%E9%94%AE%E5%8F%82%E6%95%B0%E8%A7%A3%E8%AF%BB"><span class="toc-number">1.8.1.</span> <span class="toc-text">1. 关键参数解读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%B8%BA%E4%BB%80%E4%B9%888%E6%A0%B8%E5%8D%B4%E6%9C%8912%E7%BA%BF%E7%A8%8B%EF%BC%9F%E2%80%94%E2%80%94%E6%B7%B7%E5%90%88%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.8.2.</span> <span class="toc-text">2. 为什么8核却有12线程？——混合架构设计</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9B%BE%E7%A4%BA"><span class="toc-number">1.8.2.1.</span> <span class="toc-text">图示</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E7%BC%93%E5%AD%98%E5%B1%82%E7%BA%A7%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-number">1.8.3.</span> <span class="toc-text">3. 缓存层级的作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%80%A7%E8%83%BD%E5%BD%B1%E5%93%8D%E4%B8%8E%E4%BD%BF%E7%94%A8%E5%BB%BA%E8%AE%AE"><span class="toc-number">1.8.4.</span> <span class="toc-text">4. 性能影响与使用建议</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%881%EF%BC%89%E6%B7%B7%E5%90%88%E6%A0%B8%E5%BF%83%E7%9A%84%E8%B0%83%E5%BA%A6"><span class="toc-number">1.8.4.1.</span> <span class="toc-text">（1）混合核心的调度</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%882%EF%BC%89%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E4%BC%98%E5%8C%96"><span class="toc-number">1.8.4.2.</span> <span class="toc-text">（2）应用场景优化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%883%EF%BC%89%E6%9F%A5%E7%9C%8B%E5%AE%9E%E6%97%B6%E6%A0%B8%E5%BF%83%E5%8D%A0%E7%94%A8"><span class="toc-number">1.8.4.3.</span> <span class="toc-text">（3）查看实时核心占用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%AE%BE%E8%AE%A1%E6%B7%B7%E5%90%88%E6%9E%B6%E6%9E%84%EF%BC%9F"><span class="toc-number">1.8.5.</span> <span class="toc-text">5. 为什么设计混合架构？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.8.6.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%92%88%E5%AF%B9%E6%80%A7%E7%9A%84%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E6%A1%88%E4%BE%8B"><span class="toc-number">2.</span> <span class="toc-text">针对性的程序设计案例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF"><span class="toc-number">2.0.1.</span> <span class="toc-text">1. 设计思路</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%881%EF%BC%89%E7%BA%BF%E7%A8%8B%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5"><span class="toc-number">2.0.1.1.</span> <span class="toc-text">（1）线程分配策略</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%882%EF%BC%89%E5%86%85%E5%AD%98%E8%AE%BF%E9%97%AE%E4%BC%98%E5%8C%96"><span class="toc-number">2.0.1.2.</span> <span class="toc-text">（2）内存访问优化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%883%EF%BC%89OpenMP%E9%85%8D%E7%BD%AE"><span class="toc-number">2.0.1.3.</span> <span class="toc-text">（3）OpenMP配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%884%EF%BC%89%E7%BC%96%E8%AF%91%E5%99%A8%E4%BC%98%E5%8C%96"><span class="toc-number">2.0.1.4.</span> <span class="toc-text">（4）编译器优化</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">2.0.2.</span> <span class="toc-text">2. 代码实现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%881%EF%BC%89%E5%9F%BA%E7%A1%80%E7%89%88%E6%9C%AC%EF%BC%88%E5%B8%A6OpenMP%E4%BC%98%E5%8C%96%EF%BC%89"><span class="toc-number">2.0.2.1.</span> <span class="toc-text">（1）基础版本（带OpenMP优化）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%882%EF%BC%89%E9%AB%98%E6%80%A7%E8%83%BD%E7%89%88%E6%9C%AC%EF%BC%88%E5%88%86%E5%9D%97-AVX2%EF%BC%89"><span class="toc-number">2.0.2.2.</span> <span class="toc-text">（2）高性能版本（分块+AVX2）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E7%BC%96%E8%AF%91%E4%B8%8E%E8%BF%90%E8%A1%8C%E4%BC%98%E5%8C%96"><span class="toc-number">2.0.3.</span> <span class="toc-text">3. 编译与运行优化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%881%EF%BC%89%E7%BC%96%E8%AF%91%E5%91%BD%E4%BB%A4%EF%BC%88GCC%EF%BC%89"><span class="toc-number">2.0.3.1.</span> <span class="toc-text">（1）编译命令（GCC）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%882%EF%BC%89%E7%BB%91%E5%AE%9AP%E6%A0%B8%EF%BC%88Linux%EF%BC%89"><span class="toc-number">2.0.3.2.</span> <span class="toc-text">（2）绑定P核（Linux）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%883%EF%BC%89Windows%E4%BB%BB%E5%8A%A1%E7%BB%91%E5%AE%9A"><span class="toc-number">2.0.3.3.</span> <span class="toc-text">（3）Windows任务绑定</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%80%A7%E8%83%BD%E5%AF%B9%E6%AF%94%EF%BC%88%E9%A2%84%E6%9C%9F%EF%BC%89"><span class="toc-number">2.0.4.</span> <span class="toc-text">4. 性能对比（预期）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E8%BF%9B%E4%B8%80%E6%AD%A5%E4%BC%98%E5%8C%96%E5%BB%BA%E8%AE%AE"><span class="toc-number">2.0.5.</span> <span class="toc-text">5. 进一步优化建议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-1"><span class="toc-number">2.0.6.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        并行计算相关概念辨析
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">baoweee</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-07-05T09:38:36.000Z" class="dt-published" itemprop="datePublished">2025-07-05</time>
+        
+        (Updated: <time datetime="2025-07-05T11:55:40.789Z" class="dt-updated" itemprop="dateModified">2025-07-05</time>)
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/HPC/" rel="tag">HPC</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="并行计算-vs-并行分布式计算"><a href="#并行计算-vs-并行分布式计算" class="headerlink" title="并行计算 vs. 并行分布式计算"></a><strong>并行计算 vs. 并行分布式计算</strong></h1><h2 id="1-并行计算（Parallel-Computing）"><a href="#1-并行计算（Parallel-Computing）" class="headerlink" title="1. 并行计算（Parallel Computing）"></a><strong>1. 并行计算（Parallel Computing）</strong></h2><p><strong>定义</strong>：<br>并行计算是指<strong>在单个计算机系统（如多核CPU、GPU或超算节点）内，使用多个计算资源同时执行多个任务或子任务</strong>，以加速计算过程。  </p>
+<p><strong>关键特点</strong>：  </p>
+<ul>
+<li><strong>共享内存架构</strong>：多个处理器&#x2F;核心通过共享内存（如RAM）交换数据。  </li>
+<li><strong>紧密耦合</strong>：计算单元之间通信延迟低（如超算节点内的CPU&#x2F;GPU互联）。  </li>
+<li><strong>典型场景</strong>：科学计算、图像渲染、数值模拟等。</li>
+</ul>
+<p><strong>示例</strong>：  </p>
+<ul>
+<li>用GPU并行计算渲染3D动画（如Pixar电影）。  </li>
+<li>在多核CPU上并行求解矩阵运算。</li>
+</ul>
+<hr>
+<h2 id="2-并行分布式计算（Parallel-Distributed-Computing）"><a href="#2-并行分布式计算（Parallel-Distributed-Computing）" class="headerlink" title="2. 并行分布式计算（Parallel Distributed Computing）"></a><strong>2. 并行分布式计算（Parallel Distributed Computing）</strong></h2><p><strong>定义</strong>：<br>并行分布式计算是<strong>将计算任务分布到多台独立的计算机（节点）上协同完成</strong>，这些节点通过网络（如以太网、InfiniBand）连接，可能位于不同地理位置。  </p>
+<p><strong>关键特点</strong>：  </p>
+<ul>
+<li><strong>分布式内存架构</strong>：每个节点有自己的内存，数据通过消息传递（如MPI）或分布式框架（如Hadoop、Spark）交换。  </li>
+<li><strong>松散耦合</strong>：节点间通信延迟较高，但扩展性更强。  </li>
+<li><strong>典型场景</strong>：大数据处理、云计算、全球气候模型等。</li>
+</ul>
+<p><strong>示例</strong>：  </p>
+<ul>
+<li>谷歌用数千台服务器并行训练AI模型（如BERT）。  </li>
+<li>比特币矿工通过分布式计算验证区块链交易。</li>
+</ul>
+<hr>
+<h2 id="为什么需要并行分布式计算？"><a href="#为什么需要并行分布式计算？" class="headerlink" title="为什么需要并行分布式计算？"></a><strong>为什么需要并行分布式计算？</strong></h2><h3 id="1-突破单机性能极限"><a href="#1-突破单机性能极限" class="headerlink" title="1. 突破单机性能极限"></a><strong>1. 突破单机性能极限</strong></h3><ul>
+<li><strong>算力需求爆炸</strong>：现代AI训练、气候模拟等任务需<strong>万亿次以上计算</strong>，单台机器无法满足。  </li>
+<li><strong>内存&#x2F;存储限制</strong>：单机无法加载PB级数据（如天文观测数据），分布式系统可拆分存储。</li>
+</ul>
+<h3 id="2-提高效率与降低成本"><a href="#2-提高效率与降低成本" class="headerlink" title="2. 提高效率与降低成本"></a><strong>2. 提高效率与降低成本</strong></h3><ul>
+<li><strong>横向扩展（Scale-out）</strong>：通过增加廉价服务器集群提升算力，比定制超算更经济。  </li>
+<li><strong>容错性</strong>：单节点故障不影响整体任务（如Hadoop自动恢复失败任务）。</li>
+</ul>
+<h3 id="3-处理地理分布的数据与计算"><a href="#3-处理地理分布的数据与计算" class="headerlink" title="3. 处理地理分布的数据与计算"></a><strong>3. 处理地理分布的数据与计算</strong></h3><ul>
+<li><strong>数据本地性</strong>：将计算任务分发到数据所在节点（如CDN边缘计算）。  </li>
+<li><strong>协作需求</strong>：全球科研团队共享分布式资源（如LHC粒子实验数据）。</li>
+</ul>
+<h3 id="4-适应现代应用场景"><a href="#4-适应现代应用场景" class="headerlink" title="4. 适应现代应用场景"></a><strong>4. 适应现代应用场景</strong></h3><ul>
+<li><strong>大数据与AI</strong>：TensorFlow&#x2F;Spark等框架依赖分布式计算处理海量样本。  </li>
+<li><strong>实时服务</strong>：分布式系统支持高并发（如淘宝双11每秒百万订单）。</li>
+</ul>
+<hr>
+<h2 id="对比总结"><a href="#对比总结" class="headerlink" title="对比总结"></a><strong>对比总结</strong></h2><table>
+<thead>
+<tr>
+<th><strong>维度</strong></th>
+<th><strong>并行计算</strong></th>
+<th><strong>并行分布式计算</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>架构</strong></td>
+<td>共享内存（多核&#x2F;GPU）</td>
+<td>分布式内存（多机网络）</td>
+</tr>
+<tr>
+<td><strong>耦合度</strong></td>
+<td>紧密（低延迟）</td>
+<td>松散（高延迟）</td>
+</tr>
+<tr>
+<td><strong>扩展性</strong></td>
+<td>有限（受单机资源限制）</td>
+<td>近乎无限（可跨数据中心）</td>
+</tr>
+<tr>
+<td><strong>典型技术</strong></td>
+<td>OpenMP、CUDA</td>
+<td>MPI、Hadoop、Spark</td>
+</tr>
+<tr>
+<td><strong>适用场景</strong></td>
+<td>数值模拟、图形渲染</td>
+<td>大数据、云计算、Web服务</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="未来方向"><a href="#未来方向" class="headerlink" title="未来方向"></a><strong>未来方向</strong></h2><ul>
+<li><strong>混合架构</strong>：超算结合分布式计算（如美国Exascale项目）。  </li>
+<li><strong>Serverless计算</strong>：自动调度分布式资源（如AWS Lambda）。  </li>
+<li><strong>量子并行计算</strong>：潜在革命性突破（如Shor算法破解密码）。</li>
+</ul>
+<p>并行分布式计算是当今数字世界的基石，从天气预报到ChatGPT，其核心逻辑都是**“分而治之”**——通过协作解决单机无法完成的挑战。</p>
+<h2 id="案例说明"><a href="#案例说明" class="headerlink" title="案例说明"></a><strong>案例说明</strong></h2><p>有一个工作站，里面有2个多核CPU，每个CPU有64核，每个核有2个线程，共$2<em>64</em>2&#x3D;256$线程。用这个工作站做计算，因为两个多核CPU集成在一个主板上，共用一块内存（也公用一套操作系统），所以就是共享内存并行计算，而不是分布式内存并行。而用一个机架式服务器，有40个刀片，每个刀片有20个节点，每个节点有两个线程，共有$40<em>20</em>2&#x3D;1600$个线程，每一个节点有自己的内存（每个节点内部有2个线程，这2个线程共享一块内存核一套操作系统），所以就是分布内存并行计算。对于共享内存并行计算，利用openMP实现多核的并行，对于分布内存并行，利用openMPI完成并行设计。</p>
+<p>节点内存共享通信时间很短，大约是<strong>纳秒级</strong>；而跨节点网络的通信时间较慢，大约是<strong>毫秒级</strong>。共享内存并行适合细粒度的任务，用OpenMP或Pthread来管理节点；分布内存并行计算适合粗粒度任务，用MPI通讯。</p>
+<p>分布式内存并行架构设计中，跨节点通讯一般通过网络（InfiniBand, 以太网）通信。</p>
+<h2 id="关于线程的说明"><a href="#关于线程的说明" class="headerlink" title="关于线程的说明"></a><strong>关于线程的说明</strong></h2><p>现代CPU设计中，一般有超线程核独立核心两种方式。超线程（Hyper-Threading）是英特尔提出的一种技术，该技术允许单个物理核心通过时间片轮转模拟出多个逻辑核心。如4核CPU在超线程下显示为8线程（任务管理器中看到8个虚拟核心）。<br>超线程的工作方式是物理核心的运算单元（ALU、FPU）被动态共享，两个线程轮流使用闲置资源，类似于“单车道分时同行”，并非真正的并行计算，但可以提高资源的利用率。理想情况下，超线程可提升15~30%性能，但某些高延迟计算场景中，性能可能会下降。</p>
+<p>物理核心等于逻辑处理器数量，则表示没有超线程；如果逻辑处理器&#x3D;物理核心x2，表示有超线程。</p>
+<p><strong>对于计算密集型任务（如科学计算），资源争用可能会导致超线程的性能下降，这个时候独立核心的数量比超线程重要。</strong></p>
+<blockquote>
+<p>可以在bios中禁用超线程（关闭bios中的HT）。</p>
+</blockquote>
+<blockquote>
+<p>可以通过任务管理器或<code>lscpu</code>命令快速产看CPU配置。</p>
+</blockquote>
+<h2 id="具体架构案例"><a href="#具体架构案例" class="headerlink" title="具体架构案例"></a><strong>具体架构案例</strong></h2><p>采用13th Gen Intel(R) Core(TM) i5-13420H CPU，查到的信息是Sockess&#x3D;1,Cores&#x3D;8,Logical processors&#x3D;12;VIrtualization&#x3D;Enable;L1 cache&#x3D;704KB；L2 cache&#x3D;7.0MB；L3 cache&#x3D;12.0MB。</p>
+<p>含义如下：</p>
+<p>CPU是<strong>第13代英特尔酷睿i5-13420H</strong>（移动端处理器），其参数解析如下：</p>
+<hr>
+<h3 id="1-关键参数解读"><a href="#1-关键参数解读" class="headerlink" title="1. 关键参数解读"></a><strong>1. 关键参数解读</strong></h3><table>
+<thead>
+<tr>
+<th><strong>参数</strong></th>
+<th><strong>值</strong></th>
+<th><strong>含义</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Sockets</strong></td>
+<td>1</td>
+<td>物理CPU插槽数（笔记本通常只有1个CPU，不可更换）。</td>
+</tr>
+<tr>
+<td><strong>Cores</strong></td>
+<td>8</td>
+<td><strong>物理核心数</strong>（真实计算单元，8个独立核心）。</td>
+</tr>
+<tr>
+<td><strong>Logical Processors</strong></td>
+<td>12</td>
+<td><strong>逻辑线程数</strong>（通过超线程技术模拟的“虚拟核心”，实际为8核12线程）。</td>
+</tr>
+<tr>
+<td><strong>Virtualization</strong></td>
+<td>Enabled</td>
+<td>支持虚拟化技术（VT-x），可运行虚拟机（如VMware、Docker）。</td>
+</tr>
+<tr>
+<td><strong>L1 Cache</strong></td>
+<td>704KB</td>
+<td>一级缓存（分指令+数据缓存，延迟最低，每个核心独占）。</td>
+</tr>
+<tr>
+<td><strong>L2 Cache</strong></td>
+<td>7.0MB</td>
+<td>二级缓存（每个性能核簇共享，速度介于L1和L3之间）。</td>
+</tr>
+<tr>
+<td><strong>L3 Cache</strong></td>
+<td>12.0MB</td>
+<td>三级缓存（所有核心共享，缓解内存访问延迟）。</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="2-为什么8核却有12线程？——混合架构设计"><a href="#2-为什么8核却有12线程？——混合架构设计" class="headerlink" title="2. 为什么8核却有12线程？——混合架构设计"></a><strong>2. 为什么8核却有12线程？——混合架构设计</strong></h3><p>你的CPU采用了英特尔<strong>混合核心架构</strong>（Performance Hybrid Architecture），具体组成如下：</p>
+<ul>
+<li><strong>性能核（P-Core）</strong>：4个物理核心，支持超线程 → 4核 × 2线程 &#x3D; <strong>8线程</strong>。  <ul>
+<li>高性能，适合游戏、渲染等重负载任务。</li>
+</ul>
+</li>
+<li><strong>能效核（E-Core）</strong>：4个物理核心，<strong>不支持超线程</strong> → 4核 × 1线程 &#x3D; <strong>4线程</strong>。  <ul>
+<li>高能效，适合后台任务（如下载、杀毒）。</li>
+</ul>
+</li>
+</ul>
+<p><strong>总计</strong>：8物理核心（4P+4E） → 12逻辑线程（8P线程 + 4E线程）。  </p>
+<h4 id="图示"><a href="#图示" class="headerlink" title="图示"></a><strong>图示</strong></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">CPU架构：</span><br><span class="line">├── P-Core 1 (物理核心1) → 逻辑线程1、线程2（超线程）</span><br><span class="line">├── P-Core 2 → 线程3、线程4</span><br><span class="line">├── P-Core 3 → 线程5、线程6</span><br><span class="line">├── P-Core 4 → 线程7、线程8</span><br><span class="line">├── E-Core 1 (物理核心5) → 线程9（无超线程）</span><br><span class="line">├── E-Core 2 → 线程10</span><br><span class="line">├── E-Core 3 → 线程11</span><br><span class="line">└── E-Core 4 → 线程12</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="3-缓存层级的作用"><a href="#3-缓存层级的作用" class="headerlink" title="3. 缓存层级的作用"></a><strong>3. 缓存层级的作用</strong></h3><ul>
+<li><strong>L1 Cache</strong>：  <ul>
+<li>分<strong>指令缓存（L1i）<strong>和</strong>数据缓存（L1d）</strong>，每个核心独占（如P核的L1d&#x3D;48KB，E核&#x3D;32KB）。  </li>
+<li>延迟≈1纳秒，速度最快，但容量最小。</li>
+</ul>
+</li>
+<li><strong>L2 Cache</strong>：  <ul>
+<li>P核簇（4核共享）≈2MB，E核簇（4核共享）≈4MB → 总计≈6MB，但系统报告为7MB（可能包含其他专用缓存）。</li>
+</ul>
+</li>
+<li><strong>L3 Cache</strong>：  <ul>
+<li>所有核心共享12MB，避免频繁访问内存（延迟≈30纳秒）。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="4-性能影响与使用建议"><a href="#4-性能影响与使用建议" class="headerlink" title="4. 性能影响与使用建议"></a><strong>4. 性能影响与使用建议</strong></h3><h4 id="（1）混合核心的调度"><a href="#（1）混合核心的调度" class="headerlink" title="（1）混合核心的调度"></a><strong>（1）混合核心的调度</strong></h4><ul>
+<li><strong>Windows 11</strong>：内置线程调度器（Intel Thread Director）自动分配任务：  <ul>
+<li>重负载任务 → P核（高频+超线程）。  </li>
+<li>轻负载任务 → E核（省电）。</li>
+</ul>
+</li>
+<li><strong>旧版系统（如Win10）</strong>：可能需要手动设置进程亲和性（通过任务管理器分配核心）。</li>
+</ul>
+<h4 id="（2）应用场景优化"><a href="#（2）应用场景优化" class="headerlink" title="（2）应用场景优化"></a><strong>（2）应用场景优化</strong></h4><ul>
+<li><strong>游戏&#x2F;专业软件</strong>：优先绑定到P核（避免E核拖累性能）。  </li>
+<li><strong>多线程渲染</strong>：12线程可全部利用，但E核性能较弱（实际增益可能低于纯8P核CPU）。</li>
+</ul>
+<h4 id="（3）查看实时核心占用"><a href="#（3）查看实时核心占用" class="headerlink" title="（3）查看实时核心占用"></a><strong>（3）查看实时核心占用</strong></h4><ul>
+<li><strong>工具</strong>：  <ul>
+<li><strong>Intel XTU</strong>（Extreme Tuning Utility）：监控P核&#x2F;E核频率和负载。  </li>
+<li><strong>HWiNFO</strong>：详细查看缓存占用和核心状态。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="5-为什么设计混合架构？"><a href="#5-为什么设计混合架构？" class="headerlink" title="5. 为什么设计混合架构？"></a><strong>5. 为什么设计混合架构？</strong></h3><ul>
+<li><strong>能效平衡</strong>：笔记本需兼顾性能和续航，E核处理后台任务可降低功耗。  </li>
+<li><strong>成本控制</strong>：E核面积小，可在相同芯片尺寸下提供更多核心数（但对用户不透明）。</li>
+</ul>
+<hr>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h3><ul>
+<li><strong>8核12线程</strong> &#x3D; 4P核（8线程） + 4E核（4线程），是英特尔12&#x2F;13代混合架构的典型设计。  </li>
+<li><strong>缓存分级</strong>（L1&#x2F;L2&#x2F;L3）是为了平衡速度与容量，减少内存访问延迟。  </li>
+<li><strong>最佳实践</strong>：Win11系统无需手动干预，但高性能任务可尝试绑定P核。</li>
+</ul>
+<p>如果需要进一步测试你的CPU在实际应用（如游戏、编程编译）中的核心利用率，可以借助工具监控（如MSI Afterburner + RTSS）！</p>
+<h1 id="针对性的程序设计案例"><a href="#针对性的程序设计案例" class="headerlink" title="针对性的程序设计案例"></a>针对性的程序设计案例</h1><p>为了在**13代Intel i5-13420H（8核12线程）**上实现最高性能的矩阵乘法，需结合OpenMP的线程调度、内存访问优化和CPU混合架构特性。以下是完整的设计思路和代码实现：</p>
+<hr>
+<h3 id="1-设计思路"><a href="#1-设计思路" class="headerlink" title="1. 设计思路"></a><strong>1. 设计思路</strong></h3><h4 id="（1）线程分配策略"><a href="#（1）线程分配策略" class="headerlink" title="（1）线程分配策略"></a><strong>（1）线程分配策略</strong></h4><ul>
+<li><strong>优先绑定到P核</strong>：避免E核的低性能影响计算密集型任务。</li>
+<li><strong>线程数设置</strong>：建议设置为P核逻辑线程数（8线程，4P核×2超线程），而非全部12线程（E核可能拖累性能）。</li>
+</ul>
+<h4 id="（2）内存访问优化"><a href="#（2）内存访问优化" class="headerlink" title="（2）内存访问优化"></a><strong>（2）内存访问优化</strong></h4><ul>
+<li><strong>分块计算（Blocking）</strong>：利用CPU缓存局部性，减少内存访问延迟。</li>
+<li><strong>连续内存访问</strong>：按行优先存储矩阵，避免缓存抖动。</li>
+</ul>
+<h4 id="（3）OpenMP配置"><a href="#（3）OpenMP配置" class="headerlink" title="（3）OpenMP配置"></a><strong>（3）OpenMP配置</strong></h4><ul>
+<li>启用动态调度（适应混合核心负载）。</li>
+<li>禁用超线程（若测试发现性能下降）。</li>
+</ul>
+<h4 id="（4）编译器优化"><a href="#（4）编译器优化" class="headerlink" title="（4）编译器优化"></a><strong>（4）编译器优化</strong></h4><ul>
+<li>启用AVX2指令集（利用P核的SIMD并行计算）。</li>
+</ul>
+<hr>
+<h3 id="2-代码实现"><a href="#2-代码实现" class="headerlink" title="2. 代码实现"></a><strong>2. 代码实现</strong></h3><h4 id="（1）基础版本（带OpenMP优化）"><a href="#（1）基础版本（带OpenMP优化）" class="headerlink" title="（1）基础版本（带OpenMP优化）"></a><strong>（1）基础版本（带OpenMP优化）</strong></h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;chrono&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;omp.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">matrix_multiply</span><span class="params">(<span class="type">const</span> std::vector&lt;std::vector&lt;<span class="type">double</span>&gt;&gt;&amp; A,</span></span></span><br><span class="line"><span class="params"><span class="function">                    <span class="type">const</span> std::vector&lt;std::vector&lt;<span class="type">double</span>&gt;&gt;&amp; B,</span></span></span><br><span class="line"><span class="params"><span class="function">                    std::vector&lt;std::vector&lt;<span class="type">double</span>&gt;&gt;&amp; C)</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> n = A.<span class="built_in">size</span>();</span><br><span class="line">    <span class="meta">#<span class="keyword">pragma</span> omp parallel for collapse(2) schedule(dynamic) num_threads(8)</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; n; ++j) &#123;</span><br><span class="line">            <span class="type">double</span> sum = <span class="number">0.0</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> k = <span class="number">0</span>; k &lt; n; ++k) &#123;</span><br><span class="line">                sum += A[i][k] * B[k][j];</span><br><span class="line">            &#125;</span><br><span class="line">            C[i][j] = sum;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> n = <span class="number">1024</span>; <span class="comment">// 矩阵大小</span></span><br><span class="line">    std::vector&lt;std::vector&lt;<span class="type">double</span>&gt;&gt; <span class="built_in">A</span>(n, std::<span class="built_in">vector</span>&lt;<span class="type">double</span>&gt;(n, <span class="number">1.0</span>));</span><br><span class="line">    std::vector&lt;std::vector&lt;<span class="type">double</span>&gt;&gt; <span class="built_in">B</span>(n, std::<span class="built_in">vector</span>&lt;<span class="type">double</span>&gt;(n, <span class="number">1.0</span>));</span><br><span class="line">    std::vector&lt;std::vector&lt;<span class="type">double</span>&gt;&gt; <span class="built_in">C</span>(n, std::<span class="built_in">vector</span>&lt;<span class="type">double</span>&gt;(n, <span class="number">0.0</span>));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">auto</span> start = std::chrono::high_resolution_clock::<span class="built_in">now</span>();</span><br><span class="line">    <span class="built_in">matrix_multiply</span>(A, B, C);</span><br><span class="line">    <span class="keyword">auto</span> end = std::chrono::high_resolution_clock::<span class="built_in">now</span>();</span><br><span class="line"></span><br><span class="line">    std::chrono::duration&lt;<span class="type">double</span>&gt; elapsed = end - start;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Time: &quot;</span> &lt;&lt; elapsed.<span class="built_in">count</span>() &lt;&lt; <span class="string">&quot; seconds\n&quot;</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="（2）高性能版本（分块-AVX2）"><a href="#（2）高性能版本（分块-AVX2）" class="headerlink" title="（2）高性能版本（分块+AVX2）"></a><strong>（2）高性能版本（分块+AVX2）</strong></h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;immintrin.h&gt;</span> <span class="comment">// AVX2</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">matrix_multiply_blocked</span><span class="params">(<span class="type">const</span> <span class="type">double</span>* A, <span class="type">const</span> <span class="type">double</span>* B, <span class="type">double</span>* C, <span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> block_size = <span class="number">64</span>; <span class="comment">// 分块大小（适配L1缓存）</span></span><br><span class="line">    <span class="meta">#<span class="keyword">pragma</span> omp parallel for schedule(dynamic) num_threads(8)</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i += block_size) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; n; j += block_size) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> k = <span class="number">0</span>; k &lt; n; k += block_size) &#123;</span><br><span class="line">                <span class="comment">// 分块内部计算</span></span><br><span class="line">                <span class="keyword">for</span> (<span class="type">int</span> ii = i; ii &lt; i + block_size; ++ii) &#123;</span><br><span class="line">                    <span class="keyword">for</span> (<span class="type">int</span> kk = k; kk &lt; k + block_size; ++kk) &#123;</span><br><span class="line">                        __m256d a = _mm256_broadcast_sd(&amp;A[ii * n + kk]);</span><br><span class="line">                        <span class="keyword">for</span> (<span class="type">int</span> jj = j; jj &lt; j + block_size; jj += <span class="number">4</span>) &#123;</span><br><span class="line">                            __m256d b = _mm256_loadu_pd(&amp;B[kk * n + jj]);</span><br><span class="line">                            __m256d c = _mm256_loadu_pd(&amp;C[ii * n + jj]);</span><br><span class="line">                            c = _mm256_fmadd_pd(a, b, c);</span><br><span class="line">                            _mm256_storeu_pd(&amp;C[ii * n + jj], c);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="3-编译与运行优化"><a href="#3-编译与运行优化" class="headerlink" title="3. 编译与运行优化"></a><strong>3. 编译与运行优化</strong></h3><h4 id="（1）编译命令（GCC）"><a href="#（1）编译命令（GCC）" class="headerlink" title="（1）编译命令（GCC）"></a><strong>（1）编译命令（GCC）</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ -O3 -mavx2 -fopenmp -march=native matrix_multiply.cpp -o matrix_multiply</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>-O3</code>：启用最高级别优化。</li>
+<li><code>-mavx2</code>：使用AVX2指令集（P核支持）。</li>
+<li><code>-fopenmp</code>：启用OpenMP。</li>
+<li><code>-march=native</code>：适配本地CPU架构。</li>
+</ul>
+<h4 id="（2）绑定P核（Linux）"><a href="#（2）绑定P核（Linux）" class="headerlink" title="（2）绑定P核（Linux）"></a><strong>（2）绑定P核（Linux）</strong></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> OMP_PLACES=cores</span><br><span class="line"><span class="built_in">export</span> OMP_PROC_BIND=close</span><br><span class="line"><span class="built_in">export</span> OMP_NUM_THREADS=8</span><br><span class="line">./matrix_multiply</span><br></pre></td></tr></table></figure>
+
+<h4 id="（3）Windows任务绑定"><a href="#（3）Windows任务绑定" class="headerlink" title="（3）Windows任务绑定"></a><strong>（3）Windows任务绑定</strong></h4><ul>
+<li>使用<code>SetProcessAffinityMask</code> API或通过任务管理器手动绑定进程到P核。</li>
+</ul>
+<hr>
+<h3 id="4-性能对比（预期）"><a href="#4-性能对比（预期）" class="headerlink" title="4. 性能对比（预期）"></a><strong>4. 性能对比（预期）</strong></h3><table>
+<thead>
+<tr>
+<th><strong>优化方法</strong></th>
+<th>1024×1024矩阵时间（秒）</th>
+<th>加速比</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>单线程</td>
+<td>~5.0</td>
+<td>1x</td>
+</tr>
+<tr>
+<td>OpenMP（8线程）</td>
+<td>~0.8</td>
+<td>6x</td>
+</tr>
+<tr>
+<td>分块+AVX2+OpenMP</td>
+<td>~0.15</td>
+<td>33x</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="5-进一步优化建议"><a href="#5-进一步优化建议" class="headerlink" title="5. 进一步优化建议"></a><strong>5. 进一步优化建议</strong></h3><ol>
+<li><strong>内存布局</strong>：改用一维数组（<code>double*</code>）避免二维<code>vector</code>的间接访问。</li>
+<li><strong>NUMA感知</strong>：大矩阵时考虑内存分页对齐（<code>aligned_alloc</code>）。</li>
+<li><strong>Intel MKL</strong>：直接调用<code>cblas_dgemm</code>（高度优化的BLAS库）。</li>
+</ol>
+<hr>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a><strong>总结</strong></h3><ul>
+<li><strong>核心策略</strong>：线程绑定P核 + 分块缓存优化 + AVX2指令集。</li>
+<li><strong>代码关键点</strong>：OpenMP动态调度、分块大小适配L1缓存、SIMD向量化。</li>
+<li><strong>测试建议</strong>：逐步增加线程数和块大小，通过<code>perf</code>或<code>VTune</code>分析瓶颈。</li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a href="/tags/">Tag</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/ixum">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97-vs-%E5%B9%B6%E8%A1%8C%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97"><span class="toc-number">1.</span> <span class="toc-text">并行计算 vs. 并行分布式计算</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%EF%BC%88Parallel-Computing%EF%BC%89"><span class="toc-number">1.1.</span> <span class="toc-text">1. 并行计算（Parallel Computing）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%B9%B6%E8%A1%8C%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%EF%BC%88Parallel-Distributed-Computing%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">2. 并行分布式计算（Parallel Distributed Computing）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%B9%B6%E8%A1%8C%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97%EF%BC%9F"><span class="toc-number">1.3.</span> <span class="toc-text">为什么需要并行分布式计算？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%AA%81%E7%A0%B4%E5%8D%95%E6%9C%BA%E6%80%A7%E8%83%BD%E6%9E%81%E9%99%90"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. 突破单机性能极限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%8F%90%E9%AB%98%E6%95%88%E7%8E%87%E4%B8%8E%E9%99%8D%E4%BD%8E%E6%88%90%E6%9C%AC"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. 提高效率与降低成本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%A4%84%E7%90%86%E5%9C%B0%E7%90%86%E5%88%86%E5%B8%83%E7%9A%84%E6%95%B0%E6%8D%AE%E4%B8%8E%E8%AE%A1%E7%AE%97"><span class="toc-number">1.3.3.</span> <span class="toc-text">3. 处理地理分布的数据与计算</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E9%80%82%E5%BA%94%E7%8E%B0%E4%BB%A3%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.3.4.</span> <span class="toc-text">4. 适应现代应用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E6%AF%94%E6%80%BB%E7%BB%93"><span class="toc-number">1.4.</span> <span class="toc-text">对比总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AA%E6%9D%A5%E6%96%B9%E5%90%91"><span class="toc-number">1.5.</span> <span class="toc-text">未来方向</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E8%AF%B4%E6%98%8E"><span class="toc-number">1.6.</span> <span class="toc-text">案例说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E7%BA%BF%E7%A8%8B%E7%9A%84%E8%AF%B4%E6%98%8E"><span class="toc-number">1.7.</span> <span class="toc-text">关于线程的说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B7%E4%BD%93%E6%9E%B6%E6%9E%84%E6%A1%88%E4%BE%8B"><span class="toc-number">1.8.</span> <span class="toc-text">具体架构案例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%85%B3%E9%94%AE%E5%8F%82%E6%95%B0%E8%A7%A3%E8%AF%BB"><span class="toc-number">1.8.1.</span> <span class="toc-text">1. 关键参数解读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%B8%BA%E4%BB%80%E4%B9%888%E6%A0%B8%E5%8D%B4%E6%9C%8912%E7%BA%BF%E7%A8%8B%EF%BC%9F%E2%80%94%E2%80%94%E6%B7%B7%E5%90%88%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.8.2.</span> <span class="toc-text">2. 为什么8核却有12线程？——混合架构设计</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9B%BE%E7%A4%BA"><span class="toc-number">1.8.2.1.</span> <span class="toc-text">图示</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E7%BC%93%E5%AD%98%E5%B1%82%E7%BA%A7%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-number">1.8.3.</span> <span class="toc-text">3. 缓存层级的作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%80%A7%E8%83%BD%E5%BD%B1%E5%93%8D%E4%B8%8E%E4%BD%BF%E7%94%A8%E5%BB%BA%E8%AE%AE"><span class="toc-number">1.8.4.</span> <span class="toc-text">4. 性能影响与使用建议</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%881%EF%BC%89%E6%B7%B7%E5%90%88%E6%A0%B8%E5%BF%83%E7%9A%84%E8%B0%83%E5%BA%A6"><span class="toc-number">1.8.4.1.</span> <span class="toc-text">（1）混合核心的调度</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%882%EF%BC%89%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E4%BC%98%E5%8C%96"><span class="toc-number">1.8.4.2.</span> <span class="toc-text">（2）应用场景优化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%883%EF%BC%89%E6%9F%A5%E7%9C%8B%E5%AE%9E%E6%97%B6%E6%A0%B8%E5%BF%83%E5%8D%A0%E7%94%A8"><span class="toc-number">1.8.4.3.</span> <span class="toc-text">（3）查看实时核心占用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%AE%BE%E8%AE%A1%E6%B7%B7%E5%90%88%E6%9E%B6%E6%9E%84%EF%BC%9F"><span class="toc-number">1.8.5.</span> <span class="toc-text">5. 为什么设计混合架构？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.8.6.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%92%88%E5%AF%B9%E6%80%A7%E7%9A%84%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E6%A1%88%E4%BE%8B"><span class="toc-number">2.</span> <span class="toc-text">针对性的程序设计案例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF"><span class="toc-number">2.0.1.</span> <span class="toc-text">1. 设计思路</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%881%EF%BC%89%E7%BA%BF%E7%A8%8B%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5"><span class="toc-number">2.0.1.1.</span> <span class="toc-text">（1）线程分配策略</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%882%EF%BC%89%E5%86%85%E5%AD%98%E8%AE%BF%E9%97%AE%E4%BC%98%E5%8C%96"><span class="toc-number">2.0.1.2.</span> <span class="toc-text">（2）内存访问优化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%883%EF%BC%89OpenMP%E9%85%8D%E7%BD%AE"><span class="toc-number">2.0.1.3.</span> <span class="toc-text">（3）OpenMP配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%884%EF%BC%89%E7%BC%96%E8%AF%91%E5%99%A8%E4%BC%98%E5%8C%96"><span class="toc-number">2.0.1.4.</span> <span class="toc-text">（4）编译器优化</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">2.0.2.</span> <span class="toc-text">2. 代码实现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%881%EF%BC%89%E5%9F%BA%E7%A1%80%E7%89%88%E6%9C%AC%EF%BC%88%E5%B8%A6OpenMP%E4%BC%98%E5%8C%96%EF%BC%89"><span class="toc-number">2.0.2.1.</span> <span class="toc-text">（1）基础版本（带OpenMP优化）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%882%EF%BC%89%E9%AB%98%E6%80%A7%E8%83%BD%E7%89%88%E6%9C%AC%EF%BC%88%E5%88%86%E5%9D%97-AVX2%EF%BC%89"><span class="toc-number">2.0.2.2.</span> <span class="toc-text">（2）高性能版本（分块+AVX2）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E7%BC%96%E8%AF%91%E4%B8%8E%E8%BF%90%E8%A1%8C%E4%BC%98%E5%8C%96"><span class="toc-number">2.0.3.</span> <span class="toc-text">3. 编译与运行优化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%881%EF%BC%89%E7%BC%96%E8%AF%91%E5%91%BD%E4%BB%A4%EF%BC%88GCC%EF%BC%89"><span class="toc-number">2.0.3.1.</span> <span class="toc-text">（1）编译命令（GCC）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%882%EF%BC%89%E7%BB%91%E5%AE%9AP%E6%A0%B8%EF%BC%88Linux%EF%BC%89"><span class="toc-number">2.0.3.2.</span> <span class="toc-text">（2）绑定P核（Linux）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%883%EF%BC%89Windows%E4%BB%BB%E5%8A%A1%E7%BB%91%E5%AE%9A"><span class="toc-number">2.0.3.3.</span> <span class="toc-text">（3）Windows任务绑定</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%80%A7%E8%83%BD%E5%AF%B9%E6%AF%94%EF%BC%88%E9%A2%84%E6%9C%9F%EF%BC%89"><span class="toc-number">2.0.4.</span> <span class="toc-text">4. 性能对比（预期）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E8%BF%9B%E4%B8%80%E6%AD%A5%E4%BC%98%E5%8C%96%E5%BB%BA%E8%AE%AE"><span class="toc-number">2.0.5.</span> <span class="toc-text">5. 进一步优化建议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-1"><span class="toc-number">2.0.6.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/07/05/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%E8%BE%A8%E6%9E%90/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/07/05/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%E8%BE%A8%E6%9E%90/&text=并行计算相关概念辨析"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/07/05/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%E8%BE%A8%E6%9E%90/&title=并行计算相关概念辨析"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/07/05/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%E8%BE%A8%E6%9E%90/&is_video=false&description=并行计算相关概念辨析"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=并行计算相关概念辨析&body=Check out this article: http://example.com/2025/07/05/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%E8%BE%A8%E6%9E%90/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/07/05/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%E8%BE%A8%E6%9E%90/&title=并行计算相关概念辨析"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/07/05/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%E8%BE%A8%E6%9E%90/&title=并行计算相关概念辨析"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/07/05/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%E8%BE%A8%E6%9E%90/&title=并行计算相关概念辨析"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/07/05/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%E8%BE%A8%E6%9E%90/&title=并行计算相关概念辨析"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/07/05/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%E8%BE%A8%E6%9E%90/&name=并行计算相关概念辨析&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/07/05/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%E8%BE%A8%E6%9E%90/&t=并行计算相关概念辨析"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2025
+    baoweee
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tag</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/ixum">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
